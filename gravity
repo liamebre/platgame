@@ -1,3 +1,4 @@
+import pygame
 def simgravity(player,ground,vely,grav):
     while not player.colliderect(ground):
         vely = vely + grav

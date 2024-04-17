@@ -1,0 +1,57 @@
+import pygame
+pygame.init()
+
+#set the windows size
+win=pygame.display.set_mode((900,600))
+#set title
+pygame.display.set_caption("Tag")
+#make the character
+x=200
+y=200
+width=40
+height=40
+velx = 10
+vely = 10
+vel = 10
+
+x2=0
+y2=500
+width2=20000
+height2=40
+
+
+
+run=True
+while run: #keep looping
+   pygame.time.delay(10) #refresh rate
+   square = pygame.Rect(x, y, width, height)
+   stage = pygame.Rect(x2, y2, width2, height2)
+   for event in pygame.event.get():
+       if event.type == pygame.QUIT:  #x in top right
+           run=False
+   #assignment to shorten code
+   keys=pygame.key.get_pressed()
+
+   if keys[pygame.K_w]:
+       y -= vely
+   if keys[pygame.K_s]:
+       y += vely
+   if keys[pygame.K_a]:
+       x -= velx
+   if keys[pygame.K_d]:
+       x += velx
+   #set background Colour
+   win.fill((0,0,0))
+   if square.colliderect(stage):
+       if keys[pygame.K_w] != True:
+           vely = 0
+       else:
+           vely= 10
+
+   #draw rectangle in position and set colour
+   pygame.draw.rect(win,(0,0,255),(square))
+   pygame.draw.rect(win,(0,255,0), (x2, y2+20, width2, height2))
+
+   #redraw the screen
+   pygame.display.update()
+pygame.quit() #exit game

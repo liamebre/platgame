@@ -1,0 +1,60 @@
+import pygame
+from gravity import simgravity
+pygame.init()
+
+#set the windows size
+win=pygame.display.set_mode((900,600))
+#set title
+pygame.display.set_caption("Tag")
+#make the character
+x = 200
+y = 200
+width = 40
+height = 40
+velx = 10
+vely = 10
+vel = 10
+x2 = 0
+y2 = 300
+width2 = 400
+height2 = 40
+grav = 2
+
+run=True
+while run: #keep looping
+   pygame.time.delay(20) #refresh rate
+   square = pygame.Rect(x, y, width, height)
+   stage = pygame.Rect(x2, y2, width2, height2)
+   for event in pygame.event.get():
+       if event.type == pygame.QUIT:  # x in top right
+           run=False
+
+   #assignmnt to shorten code
+   keys=pygame.key.get_pressed()
+   if keys[pygame.K_w]:
+       y -= vely
+   if keys[pygame.K_a]:
+       x -= velx
+   if keys[pygame.K_d]:
+       x += velx
+   if square.colliderect(stage):
+       if keys[pygame.K_w] != True:
+           vely = 0
+           grav = 2
+       else:
+           vely = 25
+
+   if not square.colliderect(stage):
+       y += 5*grav
+       while 5*grav < vely and not grav > 1.5:
+           grav += .2
+
+   # set background Colour
+   win.fill((0,0,0))
+   #draw rectangle in position and set colour
+   pygame.draw.rect(win,(0,0,255),(square))
+   pygame.draw.rect(win,(0,255,0), (x2, y2+10, width2, height2))
+
+   #redraw the screen
+   pygame.display.update()
+pygame.quit() #exit game

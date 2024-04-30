@@ -1,60 +1,58 @@
 import pygame
-from gravity import simgravity
+import os
 pygame.init()
+pygame.mixer.init()
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, "img")
+WIDTH = 900
+HEIGHT = 600
+win = pygame.display.set_mode((WIDTH,HEIGHT))
+FPS = 30
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.image = pygame.image.load(os.path.join(img_folder, "scan.png")).convert()
+        self.rect = self.image.get_rect()
+        self.rect.x = 200
+        self.rect.y = 200
+        self.x_vel = 10
+        self.y_vel = 10
+    def update(self):
+        self.x_vel = 0
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT] and not self.rect.x < 0 :
+            self.x_vel = -10
+        if keys[pygame.K_RIGHT] and not self.rect.x > WIDTH:
+            self.x_vel = 10
+        if keys[pygame.K_UP] and not self.rect.top >0:
+            self.y_vel = 10
+        if keys[pygame.K_DOWN] and not self.rect.bottom <HEIGHT:
+            self.y_vel = 10
+        self.rect.right += self.x_vel
+        self.rect.right += self.x_vel
+all_sprites=pygame.sprite.Group()
+player = Player()
+players = pygame.sprite.Group()
+players.add(player)
+all_sprites.add(players)
 
-#set the windows size
-win=pygame.display.set_mode((900,600))
-#set title
-pygame.display.set_caption("Tag")
-#make the character
-x = 200
-y = 200
-width = 40
-height = 40
-velx = 10
-vely = 10
-vel = 10
-x2 = 0
-y2 = 300
-width2 = 400
-height2 = 40
-grav = 2
 
-run=True
-while run: #keep looping
-   pygame.time.delay(20) #refresh rate
-   square = pygame.Rect(x, y, width, height)
-   stage = pygame.Rect(x2, y2, width2, height2)
-   for event in pygame.event.get():
-       if event.type == pygame.QUIT:  # x in top right
-           run=False
+# set the windows size
 
-   #assignmnt to shorten code
-   keys=pygame.key.get_pressed()
-   if keys[pygame.K_w]:
-       y -= vely
-   if keys[pygame.K_a]:
-       x -= velx
-   if keys[pygame.K_d]:
-       x += velx
-   if square.colliderect(stage):
-       if keys[pygame.K_w] != True:
-           vely = 0
-           grav = 2
-       else:
-           vely = 25
-
-   if not square.colliderect(stage):
-       y += 5*grav
-       while 5*grav < vely and not grav > 1.5:
-           grav += .2
-
-   # set background Colour
-   win.fill((0,0,0))
-   #draw rectangle in position and set colour
-   pygame.draw.rect(win,(0,0,255),(square))
-   pygame.draw.rect(win,(0,255,0), (x2, y2+10, width2, height2))
-
-   #redraw the screen
-   pygame.display.update()
-pygame.quit() #exit game
+# set title
+pygame.display.set_caption("JUMP")
+clock=pygame.time.Clock()
+run = True
+while run: # keep looping
+    clock.tick(FPS)  # refresh rate
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:  # x in top right
+            run = False
+    all_sprites.update()
+    # set background Colour
+    win.fill((0,0,0))
+    # draw rectangle in position and set colour
+    # redraw the screen
+    all_sprites.draw(win)
+    pygame.display.flip()
+pygame.quit()  # exit game

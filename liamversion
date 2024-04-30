@@ -11,25 +11,47 @@ FPS = 30
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.image.load(os.path.join(img_folder, "scan.png")).convert()
+        self.image = pygame.image.load(os.path.join(img_folder, "scans2.png")).convert()
         self.rect = self.image.get_rect()
         self.rect.x = 200
         self.rect.y = 200
         self.x_vel = 10
         self.y_vel = 10
+        self.grav = 1
+        self.jump_height = 10
+        self.jump_speed = self.jump_height
+        self.jump = False
     def update(self):
         self.x_vel = 0
+        self.y_vel = 0
         keys = pygame.key.get_pressed()
-        if keys[pygame.K_LEFT] and not self.rect.x < 0 :
+        if keys[pygame.K_LEFT]:
             self.x_vel = -10
-        if keys[pygame.K_RIGHT] and not self.rect.x > WIDTH:
+        if keys[pygame.K_RIGHT]:
             self.x_vel = 10
-        if keys[pygame.K_UP] and not self.rect.top >0:
+        if keys[pygame.K_UP]:
+            self.jump = True
+        if self.jump:
+            self.rect.y -= self.jump_speed
+            self.jump_speed -= self.grav
+            if self.jump_speed < -self.jump_height:
+                self.jump_speed = self.jump_height
+                self.jump = False
+        if keys[pygame.K_DOWN]:
             self.y_vel = 10
-        if keys[pygame.K_DOWN] and not self.rect.bottom <HEIGHT:
-            self.y_vel = 10
-        self.rect.right += self.x_vel
-        self.rect.right += self.x_vel
+        self.rect.x += self.x_vel
+        self.rect.y += self.y_vel
+        
+        
+class platfrom(pygame.sprite.Sprite):
+    def __init__(self,x,y):
+        self.image = pygame.image.load(os.path.join(img_folder, "scans2.png")).convert()
+        self.rect = self.image.get_rect()
+        self.x = x 
+        self.y = y 
+    
+    
+    
 all_sprites=pygame.sprite.Group()
 player = Player()
 players = pygame.sprite.Group()
